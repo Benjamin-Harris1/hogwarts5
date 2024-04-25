@@ -44,24 +44,24 @@ public class Student {
     return firstName;
   }
 
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
+  public void setFirstName(String firstName){
+    this.firstName = capitalize(firstName);
   }
 
   public String getMiddleName() {
     return middleName;
   }
 
-  public void setMiddleName(String middleName) {
-    this.middleName = middleName;
+  public void setMiddleName(String middleName){
+    this.middleName = capitalize(middleName);
   }
 
   public String getLastName() {
     return lastName;
   }
 
-  public void setLastName(String lastName) {
-    this.lastName = lastName;
+  public void setLastName(String lastName){
+    this.lastName = capitalize(lastName);
   }
 
   public House getHouse() {
@@ -114,4 +114,19 @@ public class Student {
     }
   }
 
+
+  /****************
+   * Capitalization feature
+   ****************/
+
+  private String capitalize(String name){
+    if (name == null || name.isEmpty()){
+      return name;
+    }
+    String[] parts = name.split(" ");
+    for (int i = 0; i < parts.length; i++) {
+      parts[i] = parts[i].substring(0, 1).toUpperCase() + parts[i].substring(1).toLowerCase();
+    }
+    return String.join(" ", parts);
+  }
 }
