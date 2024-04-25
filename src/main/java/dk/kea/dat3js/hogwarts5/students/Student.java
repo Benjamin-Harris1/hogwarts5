@@ -98,15 +98,19 @@ public class Student {
   }
 
   public void setFullName(String fullName){
-    int firstSpace = fullName.indexOf(' ');
-    int lastSpace = fullName.lastIndexOf(' ');
-
-    setFirstName(fullName.substring(0, firstSpace));
-    if(firstSpace != lastSpace){
-      setMiddleName(fullName.substring(firstSpace + 1, lastSpace));
-      setLastName(fullName.substring(lastSpace + 1));
+    if (fullName == null || fullName.isEmpty()){
+        return;
     } else {
-      setLastName(fullName.substring(firstSpace + 1));
+      int firstSpace = fullName.indexOf(' ');
+      int lastSpace = fullName.lastIndexOf(' ');
+  
+      setFirstName(fullName.substring(0, firstSpace));
+      if(firstSpace != lastSpace){
+        setMiddleName(fullName.substring(firstSpace + 1, lastSpace));
+        setLastName(fullName.substring(lastSpace + 1));
+      } else {
+        setLastName(fullName.substring(firstSpace + 1));
+      }
     }
   }
 
