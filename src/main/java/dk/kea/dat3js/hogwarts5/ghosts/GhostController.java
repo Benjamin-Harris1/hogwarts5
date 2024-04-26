@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/ghosts")
@@ -24,11 +25,15 @@ public class GhostController {
 
     private void initGhosts(){
         if(ghosts.isEmpty()) {
-            ghosts.add(new Ghost(1, "Nearly Headless Nick", "Sir Nicholas de Mimsy-Porpington", houseService.findById("Gryffindor").get()));
-            ghosts.add(new Ghost(2, "The Bloody Baron", "Baron", houseService.findById("Slytherin").get()));
-            ghosts.add(new Ghost(3, "The Fat Friar", "Friar", houseService.findById("Hufflepuff").get()));
-            ghosts.add(new Ghost(4, "The Grey Lady", "Helena Ravenclaw", houseService.findById("Ravenclaw").get()));
-        }
+        ghosts.add(new Ghost(1, "Nearly Headless Nick", "Sir Nicholas de Mimsy-Porpington", 
+            houseService.findById("Gryffindor").orElseThrow(() -> new NoSuchElementException("House Gryffindor not found"))));
+        ghosts.add(new Ghost(2, "The Bloody Baron", "Baron", 
+            houseService.findById("Slytherin").orElseThrow(() -> new NoSuchElementException("House Slytherin not found"))));
+        ghosts.add(new Ghost(3, "The Fat Friar", "Friar", 
+            houseService.findById("Hufflepuff").orElseThrow(() -> new NoSuchElementException("House Hufflepuff not found"))));
+        ghosts.add(new Ghost(4, "The Grey Lady", "Helena Ravenclaw", 
+            houseService.findById("Ravenclaw").orElseThrow(() -> new NoSuchElementException("House Ravenclaw not found"))));
+    }
     }
 
     @GetMapping
