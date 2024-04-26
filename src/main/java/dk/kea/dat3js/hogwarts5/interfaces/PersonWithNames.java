@@ -34,7 +34,11 @@ public interface PersonWithNames {
         }
         String[] parts = name.split(" ");
         for (int i = 0; i < parts.length; i++) {
-            parts[i] = parts[i].substring(0, 1).toUpperCase() + parts[i].substring(1).toLowerCase();
+            if (parts[i].startsWith("Mc") && parts[i].length() > 2) {
+                parts[i] = parts[i].substring(0, 1).toUpperCase() + parts[i].substring(1, 2).toLowerCase() + parts[i].substring(2, 3).toUpperCase() + parts[i].substring(3).toLowerCase();
+            } else {
+                parts[i] = parts[i].substring(0, 1).toUpperCase() + parts[i].substring(1).toLowerCase();
+            }
         }
         return String.join(" ", parts);
     }

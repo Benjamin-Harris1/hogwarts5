@@ -82,6 +82,7 @@ public class TeacherService {
         teacherEntity.getFirstName(),
         teacherEntity.getMiddleName(),
         teacherEntity.getLastName(),
+        teacherEntity.getFullName(),
         teacherEntity.getHouse().getName(),
         teacherEntity.getMainSubject(),
         teacherEntity.getEmploymentDate()
