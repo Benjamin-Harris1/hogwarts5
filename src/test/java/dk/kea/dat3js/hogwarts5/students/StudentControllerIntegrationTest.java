@@ -8,6 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -73,5 +74,20 @@ public class StudentControllerIntegrationTest {
                             "schoolYear": 1
                         }
                         """);
+    }
+
+    @Test
+    void updatePrefectStatus_ShouldSucceedForEligibleStudent() {
+        int studentId = 3; 
+        boolean newPrefectStatus = true;
+
+        webClient.patch().uri("/students/{id}/prefect", studentId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(String.valueOf(newPrefectStatus))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.prefect").isEqualTo(newPrefectStatus)
+                .jsonPath("$.id").isEqualTo(studentId);
     }
 }
