@@ -25,8 +25,8 @@ public class PrefectController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<StudentResponseDTO> getPrefectById(@PathVariable Integer studentId) {
-    return ResponseEntity.of(prefectService.getPrefectById(studentId));
+    public ResponseEntity<StudentResponseDTO> getPrefectById(@PathVariable Integer id) {
+    return ResponseEntity.of(prefectService.getPrefectById(id));
             
 }
 
@@ -37,14 +37,14 @@ public class PrefectController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<Void> appointPrefect(@PathVariable Integer studentId) {
-        prefectService.appointPrefect(studentId);
+    public ResponseEntity<Void> appointPrefect(@PathVariable Integer id) throws Exception {
+        prefectService.appointPrefect(id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removePrefect(@PathVariable Integer studentId) {
-        prefectService.removePrefect(studentId);
+    public ResponseEntity<Void> removePrefect(@PathVariable Integer id) {
+        prefectService.removePrefect(id);
         return ResponseEntity.ok().build();
     }
 }

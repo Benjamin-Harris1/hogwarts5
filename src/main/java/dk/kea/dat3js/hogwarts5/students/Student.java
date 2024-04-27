@@ -35,6 +35,16 @@ public class Student implements PersonWithNames {
     this.schoolYear = schoolYear;
   }
 
+  public Student(String firstName, String middleName, String lastName, House house, int schoolYear, boolean prefect, String gender) {
+    this.firstName = firstName;
+    this.middleName = middleName;
+    this.lastName = lastName;
+    this.house = house;
+    this.schoolYear = schoolYear;
+    this.prefect = prefect;
+    this.gender = gender;
+  }
+
   public boolean isPrefect() {
     return prefect;
   }
