@@ -41,18 +41,18 @@ public class InitData implements CommandLineRunner {
     Set<Student> existingStudents = new HashSet<>();
     existingStudents.addAll(studentRepository.findAll());
 
-    Student harry = new Student("Harry", "James", "Potter", gryffindor, 5);
-    Student hermione = new Student("Hermione", "Jean", "Granger", gryffindor, 5);
-    Student ron = new Student("Ron", "Bilius", "Weasley", gryffindor, 5);
-    Student neville = new Student("Neville", "Frank", "Longbottom", gryffindor, 5);
-    Student ginny = new Student("Ginny", "Molly", "Weasley", gryffindor, 5);
-    Student fred = new Student("Fred", "Gideon", "Weasley", gryffindor, 5);
-    Student george = new Student("George", "Fabian", "Weasley", gryffindor, 5);
-    Student percy = new Student("Percy", "Ignatius", "Weasley", gryffindor, 5);
+    Student harry = new Student("Harry", "James", "Potter", gryffindor, 5, false, "Male");
+    Student hermione = new Student("Hermione", "Jean", "Granger", gryffindor, 5, false, "Female");
+    Student ron = new Student("Ron", "Bilius", "Weasley", gryffindor, 5, false, "Male");
+    Student neville = new Student("Neville", "Frank", "Longbottom", gryffindor, 5, false, "Male");
+    Student ginny = new Student("Ginny", "Molly", "Weasley", gryffindor, 5, false, "Female");
+    Student fred = new Student("Fred", "Gideon", "Weasley", gryffindor, 5, false, "Male");
+    Student george = new Student("George", "Fabian", "Weasley", gryffindor, 5, false, "Male");
+    Student percy = new Student("Percy", "Ignatius", "Weasley", gryffindor, 5, false, "Male");
 
-    Student draco = new Student("Draco", "", "Malfoy", slytherin, 5);
-    Student cedric = new Student("Cedric", "", "Diggory", hufflepuff, 6);
-    Student luna = new Student("Luna", "", "Lovegood", ravenclaw, 4);
+    Student draco = new Student("Draco", "", "Malfoy", slytherin, 5, true, "Male");
+    Student cedric = new Student("Cedric", "", "Diggory", hufflepuff, 6, true, "Male");
+    Student luna = new Student("Luna", "", "Lovegood", ravenclaw, 4, false, "Female");
 
     existingStudents.addAll(List.of(harry, hermione, ron, neville, ginny, fred, george, percy, draco, cedric, luna));
     studentRepository.saveAll(existingStudents);

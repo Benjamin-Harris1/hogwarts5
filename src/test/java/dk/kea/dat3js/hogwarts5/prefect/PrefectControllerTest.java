@@ -14,8 +14,9 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -27,9 +28,6 @@ class PrefectControllerTest {
 
     @MockBean
     private PrefectService prefectService;
-
-    @MockBean
-    private StudentService studentService;
 
     @Test
     void getAllPrefects() throws Exception {
@@ -65,26 +63,39 @@ class PrefectControllerTest {
 
     @Test
     void getPrefectsByHouse_ValidHouse_ReturnsPrefectsInHouse() throws Exception {
-    // Arrange
-    String house = "Gryffindor";
-    List<StudentResponseDTO> prefects = Arrays.asList(
-        new StudentResponseDTO(1, "Harry", "James", "Potter", "Harry James Potter", house, 5, true, "Male"),
-        new StudentResponseDTO(2, "Hermione", "Jean", "Granger", "Hermione Jean Granger", house, 5, true, "Female")
-    );
-    when(prefectService.getPrefectsByHouse(house)).thenReturn(prefects);
+        // Arrange
+        String house = "Gryffindor";
+        List<StudentResponseDTO> prefects = Arrays.asList(
+            new StudentResponseDTO(1, "Harry", "James", "Potter", "Harry James Potter", house, 5, true, "Male"),
+            new StudentResponseDTO(2, "Hermione", "Jean", "Granger", "Hermione Jean Granger", house, 5, true, "Female")
+        );
+        when(prefectService.getPrefectsByHouse(house)).thenReturn(prefects);
 
-    // Act & Assert
-    mockMvc.perform(get("/prefects/house/{house}", house))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(2)))
-            .andExpect(jsonPath("$[*].house").value(containsInAnyOrder(house, house)));
+        // Act & Assert
+        mockMvc.perform(get("/prefects/house/{house}", house))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[*].house").value(containsInAnyOrder(house, house)));
     }
 
     @Test
-    void appointPrefect() {
+    void appointPrefect() throws Exception {
+        // Arrange
+        int studentId = 1;
+        doNothing().when(prefectService).appointPrefect(studentId);
+
+        mockMvc.perform(post("/prefects/{id}", studentId))
+                .andExpect(status().isOk());
+
     }
 
     @Test
-    void removePrefect() {
+    void removePrefect() throws Exception {
+        // Arrange
+        int studentId = 1;
+        doNothing().when(prefectService).removePrefect(studentId);
+
+        mockMvc.perform(delete("/prefects/{id}", studentId))
+                .andExpect(status().isOk());
     }
 }

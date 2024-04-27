@@ -37,13 +37,13 @@ class PrefectServiceTest {
         int studentId = 1;
         StudentResponseDTO student = new StudentResponseDTO(studentId, "Harry", "James", "Potter", "Harry James Potter", "Gryffindor", 5, false, "Male");
         when(studentService.findById(studentId)).thenReturn(Optional.of(student));
-        when(studentService.updatePrefectStatus(studentId, true)).thenReturn(Optional.of(student));
+        when(studentService.setPrefectStatus(studentId, true)).thenReturn(Optional.of(student));
 
         // Act
         prefectService.appointPrefect(studentId);
 
         // Assert
-        verify(studentService, times(1)).updatePrefectStatus(studentId, true);
+        verify(studentService, times(1)).setPrefectStatus(studentId, true);
     }
 
     @Test
@@ -51,13 +51,13 @@ class PrefectServiceTest {
         // Arrange 
         int prefectId = 1;
         StudentResponseDTO prefect = new StudentResponseDTO(prefectId, "Harry", "James", "Potter", "Harry James Potter", "Gryffindor", 5, true, "Male");
-        when(studentService.updatePrefectStatus(prefectId, false)).thenReturn(Optional.of(prefect));
+        when(studentService.setPrefectStatus(prefectId, false)).thenReturn(Optional.of(prefect));
 
         // Act
         prefectService.removePrefect(prefectId);
 
         // Assert
-        verify(studentService, times(1)).updatePrefectStatus(prefectId, false);
+        verify(studentService, times(1)).setPrefectStatus(prefectId, false);
     }
 
     @Test
