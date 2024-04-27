@@ -25,20 +25,36 @@ public class StudentService {
     return studentRepository.findById(id).map(this::toDTO);
   }
 
-  public StudentResponseDTO save(StudentRequestDTO student) {
-    return toDTO(studentRepository.save(fromDTO(student)));
+  public StudentResponseDTO save(StudentRequestDTO studentDTO) throws Exception {
+    Student student = fromDTO(studentDTO);
+    if (student.isPrefect()) {
+        checkPrefectEligibility(student);
+    }
+    return toDTO(studentRepository.save(student));
   }
 
-  public Optional<StudentResponseDTO> updateIfExists(int id, StudentRequestDTO student) {
-    if (studentRepository.existsById(id)) {
-      Student existingStudent = fromDTO(student);
-      existingStudent.setId(id);
-      return Optional.of(toDTO(studentRepository.save(existingStudent)));
+  public Optional<StudentResponseDTO> updateIfExists(int id, StudentRequestDTO studentDTO) throws Exception {
+    Optional<Student> existingStudentOpt = studentRepository.findById(id);
+    if (existingStudentOpt.isPresent()) {
+        Student existingStudent = existingStudentOpt.get();
+
+        // Update the existing student with new details from DTO
+        Student updatedStudent = fromDTO(studentDTO);
+        updatedStudent.setId(id); // Ensure the ID remains the same
+
+        // Check if prefect status is being updated and perform eligibility checks if setting to true
+        if (studentDTO.prefect() != existingStudent.isPrefect()) {
+          if (studentDTO.prefect()) {
+              checkPrefectEligibility(updatedStudent);
+          }
+        }
+
+        // Save the updated student and convert to DTO
+        return Optional.of(toDTO(studentRepository.save(updatedStudent)));
     } else {
-      // TODO: Throw error?
-      return Optional.empty();
+        return Optional.empty();
     }
-  }
+}
 
   public Optional<StudentResponseDTO> partialUpdate(int id, StudentRequestDTO student) {
     Optional<Student> existingStudent = studentRepository.findById(id);
@@ -110,36 +126,36 @@ public class StudentService {
     Student student = studentRepository.findById(id)
         .orElseThrow(() -> new Exception("Student not found"));
 
-        
-    if (prefect) { // Only check rules when setting to prefect
-      // if student is not in 5th year or higher, throw exception
-        if (student.getSchoolYear() < 5) {
-            throw new Exception("Only students in 5th year or higher can be appointed as prefects.");
-        }
-
-        // List of all prefects in same house
-        List<Student> currentPrefects = studentRepository.findAll().stream()
-            .filter(s -> s.getHouse().equals(student.getHouse()) && s.isPrefect())
-            .toList();
-
-        // Check gender diversity and count
-        long countSameGender = currentPrefects.stream()
-            .filter(prefectStudent -> prefectStudent.getGender().equals(student.getGender()))
-            .count();
-
-        if (currentPrefects.size() >= 2) {
-            throw new Exception("There can only be two prefects per house.");
-        }
-
-        if (countSameGender >= 1) {
-            throw new Exception("Prefects in the same house must be of different genders");
-        }
+    if (prefect) {
+        checkPrefectEligibility(student);
     }
 
     student.setPrefect(prefect);
     studentRepository.save(student);
     return Optional.of(toDTO(student));
   }
+
+  public void checkPrefectEligibility(Student student) throws Exception {
+    if (student.getSchoolYear() < 5) {
+        throw new Exception("Only students in 5th year or higher can be appointed as prefects.");
+    }
+
+    List<Student> currentPrefects = studentRepository.findAll().stream()
+        .filter(s -> s.getHouse().equals(student.getHouse()) && s.isPrefect())
+        .toList();
+
+    if (currentPrefects.size() >= 2) {
+        throw new Exception("There can only be two prefects per house.");
+    }
+
+    long countSameGender = currentPrefects.stream()
+        .filter(prefectStudent -> prefectStudent.getGender().equals(student.getGender()))
+        .count();
+
+    if (countSameGender >= 1) {
+        throw new Exception("Prefects in the same house must be of different genders");
+    }
+}
 
   
 

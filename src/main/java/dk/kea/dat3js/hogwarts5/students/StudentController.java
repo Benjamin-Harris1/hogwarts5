@@ -30,12 +30,12 @@ public class StudentController {
 
   // create post, put, patch, delete methods
   @PostMapping
-  public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody StudentRequestDTO student) {
+  public ResponseEntity<StudentResponseDTO> createStudent(@RequestBody StudentRequestDTO student) throws Exception {
     return ResponseEntity.status(HttpStatus.CREATED).body(studentService.save(student));
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<StudentResponseDTO> updateStudent(@PathVariable int id, @RequestBody StudentRequestDTO student) {
+  public ResponseEntity<StudentResponseDTO> updateStudent(@PathVariable int id, @RequestBody StudentRequestDTO student) throws Exception {
     return ResponseEntity.of(studentService.updateIfExists(id, student));
   }
 
