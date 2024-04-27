@@ -49,22 +49,22 @@ class PrefectControllerTest {
     }
 
     @Test
-void getPrefectById_ValidPrefect_ReturnsPrefect() throws Exception {
-    // Arrange
-    int prefectId = 1;
-    StudentResponseDTO prefect = new StudentResponseDTO(prefectId, "Harry", "James", "Potter", "Harry James Potter", "Gryffindor", 5, true, "Male");
-    when(prefectService.getPrefectById(prefectId)).thenReturn(Optional.of(prefect));
+    void getPrefectById_ValidPrefect_ReturnsPrefect() throws Exception {
+        // Arrange
+        int prefectId = 1;
+        StudentResponseDTO prefect = new StudentResponseDTO(prefectId, "Harry", "James", "Potter", "Harry James Potter", "Gryffindor", 5, true, "Male");
+        when(prefectService.getPrefectById(prefectId)).thenReturn(Optional.of(prefect));
 
-    // Act & Assert
-    mockMvc.perform(get("/prefects/{id}", prefectId))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").value(prefectId))
-            .andExpect(jsonPath("$.firstName").value("Harry"))
-            .andExpect(jsonPath("$.prefect").value(true));
-}
+        // Act & Assert
+        mockMvc.perform(get("/prefects/{id}", prefectId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(prefectId))
+                .andExpect(jsonPath("$.firstName").value("Harry"))
+                .andExpect(jsonPath("$.prefect").value(true));
+        }
 
-@Test
-void getPrefectsByHouse_ValidHouse_ReturnsPrefectsInHouse() throws Exception {
+    @Test
+    void getPrefectsByHouse_ValidHouse_ReturnsPrefectsInHouse() throws Exception {
     // Arrange
     String house = "Gryffindor";
     List<StudentResponseDTO> prefects = Arrays.asList(
@@ -78,7 +78,7 @@ void getPrefectsByHouse_ValidHouse_ReturnsPrefectsInHouse() throws Exception {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(2)))
             .andExpect(jsonPath("$[*].house").value(containsInAnyOrder(house, house)));
-}
+    }
 
     @Test
     void appointPrefect() {

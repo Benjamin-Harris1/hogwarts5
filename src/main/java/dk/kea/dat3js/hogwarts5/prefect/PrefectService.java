@@ -43,11 +43,11 @@ public class PrefectService {
         }
 
         // Ipdate the prefect status
-        studentService.updatePrefectStatus(studentId, true);
+        studentService.setPrefectStatus(studentId, true);
     }
 
     public void removePrefect(Integer studentId) {
-        studentService.updatePrefectStatus(studentId, false);
+        studentService.setPrefectStatus(studentId, false);
     }
 
     public Optional<StudentResponseDTO> getPrefectById(Integer studentId) {

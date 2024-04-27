@@ -1,6 +1,7 @@
 package dk.kea.dat3js.hogwarts5.students;
 
 import dk.kea.dat3js.hogwarts5.house.HouseService;
+import dk.kea.dat3js.hogwarts5.prefect.PrefectService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,10 +11,12 @@ import java.util.Optional;
 public class StudentService {
   private final StudentRepository studentRepository;
   private final HouseService houseService;
+  private final PrefectService prefectService;
 
-  public StudentService(StudentRepository studentRepository, HouseService houseService) {
+  public StudentService(StudentRepository studentRepository, HouseService houseService, PrefectService prefectService) {
     this.studentRepository = studentRepository;
     this.houseService = houseService;
+      this.prefectService = prefectService;
   }
 
   public List<StudentResponseDTO> findAll() {
@@ -105,7 +108,7 @@ public class StudentService {
     return entity;
   }
 
-  public Optional<StudentResponseDTO> updatePrefectStatus(int id, boolean prefect) {
+  public Optional<StudentResponseDTO> setPrefectStatus(int id, boolean prefect) {
     Optional<Student> existingStudent = studentRepository.findById(id);
     if (existingStudent.isPresent()) {
         Student student = existingStudent.get();
