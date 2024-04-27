@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
@@ -105,15 +106,41 @@ public class StudentService {
     return entity;
   }
 
-  public Optional<StudentResponseDTO> setPrefectStatus(int id, boolean prefect) {
-    Optional<Student> existingStudent = studentRepository.findById(id);
-    if (existingStudent.isPresent()) {
-        Student student = existingStudent.get();
-        student.setPrefect(prefect);
-        return Optional.of(toDTO(studentRepository.save(student)));
-    } else {
-        return Optional.empty();
+  public Optional<StudentResponseDTO> setPrefectStatus(int id, boolean prefect) throws Exception {
+    Student student = studentRepository.findById(id)
+        .orElseThrow(() -> new Exception("Student not found"));
+
+        
+    if (prefect) { // Only check rules when setting to prefect
+      // if student is not in 5th year or higher, throw exception
+        if (student.getSchoolYear() < 5) {
+            throw new Exception("Only students in 5th year or higher can be appointed as prefects.");
+        }
+
+        // List of all prefects in same house
+        List<Student> currentPrefects = studentRepository.findAll().stream()
+            .filter(s -> s.getHouse().equals(student.getHouse()) && s.isPrefect())
+            .toList();
+
+        // Check gender diversity and count
+        long countSameGender = currentPrefects.stream()
+            .filter(prefectStudent -> prefectStudent.getGender().equals(student.getGender()))
+            .count();
+
+        if (currentPrefects.size() >= 2) {
+            throw new Exception("There can only be two prefects per house.");
+        }
+
+        if (countSameGender >= 1) {
+            throw new Exception("Prefects in the same house must be of different genders");
+        }
     }
+
+    student.setPrefect(prefect);
+    studentRepository.save(student);
+    return Optional.of(toDTO(student));
   }
+
+  
 
 }

@@ -43,7 +43,7 @@ public class PrefectController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removePrefect(@PathVariable Integer id) {
+    public ResponseEntity<Void> removePrefect(@PathVariable Integer id) throws Exception {
         prefectService.removePrefect(id);
         return ResponseEntity.ok().build();
     }

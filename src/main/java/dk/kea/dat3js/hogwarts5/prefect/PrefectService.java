@@ -18,35 +18,13 @@ public class PrefectService {
 
 
     public void appointPrefect(Integer studentId) throws Exception {
-        StudentResponseDTO student = studentService.findById(studentId)
-        .orElseThrow(() -> new Exception("Student not found"));
-
-        // if student is not in 5th year or higher, throw exception
-        if (student.schoolYear() < 5) {
-            throw new Exception("Only students in 5th year or higher can be appointed as prefects.");
-        }
-
-        // List of all prefects in same house
-        List<StudentResponseDTO> currentPrefects = getPrefectsByHouse(student.house());
-
-        // Check gender diversity and count
-        long countSameGender = currentPrefects.stream()
-        .filter(prefect -> prefect.gender().equals(student.gender()))
-        .count();
-
-        if (currentPrefects.size() >= 2) {
-            throw new Exception("There can only be two prefects per house.");
-        }
-
-        if (countSameGender >= 1) {
-            throw new Exception("Prefects in the same house must be of different genders");
-        }
+        
 
         // Ipdate the prefect status
         studentService.setPrefectStatus(studentId, true);
     }
 
-    public void removePrefect(Integer studentId) {
+    public void removePrefect(Integer studentId) throws Exception {
         studentService.setPrefectStatus(studentId, false);
     }
 

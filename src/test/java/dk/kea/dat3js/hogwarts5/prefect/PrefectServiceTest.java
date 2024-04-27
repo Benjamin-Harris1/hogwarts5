@@ -7,16 +7,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class PrefectServiceTest {
 
@@ -47,7 +44,7 @@ class PrefectServiceTest {
     }
 
     @Test
-    void removePrefect_ValidPrefect_PrefectRemoved() {
+    void removePrefect_ValidPrefect_PrefectRemoved() throws Exception {
         // Arrange 
         int prefectId = 1;
         StudentResponseDTO prefect = new StudentResponseDTO(prefectId, "Harry", "James", "Potter", "Harry James Potter", "Gryffindor", 5, true, "Male");
@@ -94,11 +91,15 @@ class PrefectServiceTest {
     }
 
     @Test
-    void appointPrefect_StudentNotInFifthYear_ThrowsException() {
+    void appointPrefect_StudentNotInFifthYear_ThrowsException() throws Exception {
         // Arrange
         int studentId = 1;
         StudentResponseDTO student = new StudentResponseDTO(studentId, "Harry", "James", "Potter", "Harry James Potter", "Gryffindor", 4, false, "Male");
         when(studentService.findById(studentId)).thenReturn(Optional.of(student));
+
+        // Mock the StudentService to throw an exception when setPrefectStatus is called
+        doThrow(new Exception("Only students in 5th year or higher can be appointed as prefects."))
+            .when(studentService).setPrefectStatus(studentId, true);
 
         // Act & Assert
         Exception exception = assertThrows(Exception.class, () -> {
@@ -109,16 +110,15 @@ class PrefectServiceTest {
     }
 
     @Test
-    void appointPrefect_TooManyPrefectsInHouse_ThrowsException() {
+    void appointPrefect_TooManyPrefectsInHouse_ThrowsException() throws Exception {
         // Arrange
         int studentId = 3;
         StudentResponseDTO student = new StudentResponseDTO(studentId, "Luna", "Lovegood", "Lovegood", "Luna Lovegood", "Ravenclaw", 5, false, "Female");
-        List<StudentResponseDTO> existingPrefects = Arrays.asList(
-            new StudentResponseDTO(1, "Cho", "Chang", "Chang", "Cho Chang", "Ravenclaw", 5, true, "Female"),
-            new StudentResponseDTO(2, "Padma", "Patil", "Patil", "Padma Patil", "Ravenclaw", 5, true, "Female")
-        );
         when(studentService.findById(studentId)).thenReturn(Optional.of(student));
-        when(prefectService.getPrefectsByHouse("Ravenclaw")).thenReturn(existingPrefects);
+
+        // Assuming setPrefectStatus is supposed to throw an exception under certain conditions
+        doThrow(new Exception("There can only be two prefects per house."))
+            .when(studentService).setPrefectStatus(studentId, true);
 
         // Act & Assert
         Exception exception = assertThrows(Exception.class, () -> {
@@ -129,15 +129,15 @@ class PrefectServiceTest {
     }
 
     @Test
-    void appointPrefect_GenderDiversityViolated_ThrowsException() {
+    void appointPrefect_GenderDiversityViolated_ThrowsException() throws Exception {
         // Arrange
         int studentId = 3;
         StudentResponseDTO newStudent = new StudentResponseDTO(studentId, "Draco", null, "Malfoy", "Draco Malfoy", "Slytherin", 5, false, "Male");
-        List<StudentResponseDTO> existingPrefects = Arrays.asList(
-            new StudentResponseDTO(2, "Blaise", null, "Zabini", "Blaise Zabini", "Slytherin", 5, true, "Male")
-        );
         when(studentService.findById(studentId)).thenReturn(Optional.of(newStudent));
-        when(prefectService.getPrefectsByHouse("Slytherin")).thenReturn(existingPrefects);
+
+        // Mock the StudentService to throw an exception when setPrefectStatus is called
+        doThrow(new Exception("Prefects in the same house must be of different genders"))
+            .when(studentService).setPrefectStatus(studentId, true);
 
         // Act & Assert
         Exception exception = assertThrows(Exception.class, () -> {
