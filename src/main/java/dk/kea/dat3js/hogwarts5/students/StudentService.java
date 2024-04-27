@@ -79,7 +79,9 @@ public class StudentService {
         studentEntity.getLastName(),
         studentEntity.getFullName(),
         studentEntity.getHouse().getName(),
-        studentEntity.getSchoolYear()
+        studentEntity.getSchoolYear(),
+        studentEntity.isPrefect(),
+        studentEntity.getGender()
     );
 
     return dto;
@@ -100,4 +102,15 @@ public class StudentService {
 
     return entity;
   }
+
+  public Optional<StudentResponseDTO> updatePrefectStatus(int id, boolean prefect) {
+    Optional<Student> existingStudent = studentRepository.findById(id);
+    if (existingStudent.isPresent()) {
+        Student student = existingStudent.get();
+        student.setPrefect(prefect);
+        return Optional.of(toDTO(studentRepository.save(student)));
+    } else {
+        return Optional.empty();
+    }
+}
 }

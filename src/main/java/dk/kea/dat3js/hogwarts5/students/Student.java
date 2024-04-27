@@ -17,6 +17,8 @@ public class Student implements PersonWithNames {
   @ManyToOne
   private House house;
   private Integer schoolYear; // 1-7
+  private boolean prefect;
+  private String gender;
 
   public Student() {
   }
@@ -31,6 +33,22 @@ public class Student implements PersonWithNames {
     this.lastName = lastName;
     this.house = house;
     this.schoolYear = schoolYear;
+  }
+
+  public boolean isPrefect() {
+    return prefect;
+  }
+
+  public void setPrefect(boolean prefect) {
+    this.prefect = prefect;
+  }
+
+  public String getGender() {
+    return gender;
+  }
+
+  public void setGender(String gender) {
+    this.gender = gender;
   }
 
   public int getId() {
