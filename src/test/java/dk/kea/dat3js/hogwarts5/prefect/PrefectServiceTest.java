@@ -128,4 +128,22 @@ class PrefectServiceTest {
         assertEquals("There can only be two prefects per house.", exception.getMessage());
     }
 
+    @Test
+    void appointPrefect_GenderDiversityViolated_ThrowsException() {
+        // Arrange
+        int studentId = 3;
+        StudentResponseDTO newStudent = new StudentResponseDTO(studentId, "Draco", null, "Malfoy", "Draco Malfoy", "Slytherin", 5, false, "Male");
+        List<StudentResponseDTO> existingPrefects = Arrays.asList(
+            new StudentResponseDTO(2, "Blaise", null, "Zabini", "Blaise Zabini", "Slytherin", 5, true, "Male")
+        );
+        when(studentService.findById(studentId)).thenReturn(Optional.of(newStudent));
+        when(prefectService.getPrefectsByHouse("Slytherin")).thenReturn(existingPrefects);
+
+        // Act & Assert
+        Exception exception = assertThrows(Exception.class, () -> {
+            prefectService.appointPrefect(studentId);
+        });
+
+        assertEquals("Prefects in the same house must be of different genders", exception.getMessage());
+    }
 }
